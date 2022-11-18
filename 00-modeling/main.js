@@ -28,7 +28,7 @@ const machine = {
  * @param {type: string} event 
  * @returns 
  */
-function transition(state, event) {
+function transition(state = { status: machine.initialState }, event) {
   const newStatus = machine.states[state.status]?.on?.[event.type] ?? state.status;
 
   return {
@@ -36,5 +36,14 @@ function transition(state, event) {
   };
 }
 
-window.machine = machine;
+let currentState = { status: machine.initialState };
+
+const service = {
+  send: (event) => {
+    currentState = transition(currentState, event);
+    console.log(currentState);
+  }
+};
+
 window.transition = transition;
+window.service = service;
