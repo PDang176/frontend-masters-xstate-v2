@@ -5,11 +5,24 @@ const machine = createMachine({
   initial: 'loading',
   states: {
     loading: {
+      entry: ['loadData'],
+      exit: [],
       on: {
-        SUCCESS: 'loaded',
+        SUCCESS: {
+          actions: () => {
+            console.log('Data Loaded'); 
+          },
+          target: 'loaded',
+        }
       },
     },
     loaded: {},
+  }
+}).withConfig({
+  actions: {
+    loadData: () => {
+      console.log('Configured Loading Data');
+    }
   }
 });
 
@@ -26,7 +39,7 @@ const machine = createMachine({
 const service = interpret(machine).start();
 
 service.subscribe((state) => {
-  console.log(state.value);
+  console.log(state.value, state.actions);
 });
 
 window.service = service;
